@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>Hello Soda Bingo Admin</title>
+<link rel = "stylesheet" type = "text/css" href = "main.css" />
+<script>
+  function nextPic() {
+    const url = "https://63g23l7y5a.execute-api.eu-west-2.amazonaws.com/addTicket";
+
+    fetch(url)
+    .then(
+      function (response) {
+        response.json()
+        .then(
+          function (data) {
+            console.log(data);
+            
+            document.getElementById('newPic').innerHTML = `<img src="pics/${data.ticket}.png" />`;
+          },
+          function (error) {alert(error);});
+      },
+      function (error) {
+        alert(error);
+      }
+    );
+  }
+
+  function resetGame() {
+    const url = "https://qs5d4b2iu5.execute-api.eu-west-2.amazonaws.com/resetGame";
+
+    fetch(url)
+    .then(
+      function (response) {
+        document.getElementById('newPic').innerHTML = "";
+        alert("Game reset!");
+      },
+      function (error) {
+        alert(error);
+      }
+    );
+  }
+</script>
+</head>
+<body>
+  <h1>Hello Soda Bingo Admin</h1>
+  <button onclick="nextPic()" style="font-size: 20pt;">Next Photo</button>
+  <br />
+  <br />
+  <div id="newPic"></div>
+  <br />
+  <br />
+  <button onclick="resetGame()" style="font-size: 20pt;">Reset Game!!!</button>
+</body>
+</html>

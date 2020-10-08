@@ -1,0 +1,10 @@
+body {
+  background-color: white;
+  font-family: verdana;
+  font-size: 14px;
+}
+.center {
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+}

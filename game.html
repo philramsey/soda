@@ -1,0 +1,120 @@
+<html>
+<head>
+<title>Amelie Bingo</title>
+<link rel = "stylesheet" type = "text/css" href = "main.css" />
+<script>
+  let url;
+  let shouldUpdate = true;
+
+  async function load() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+
+    if (name) {
+      document.getElementById("teamName").innerText = name;
+
+      url = `https://92xf7ge72k.execute-api.eu-west-2.amazonaws.com/getStatus?name=${name}`;
+
+      update();
+    }
+  }
+
+  async function update() {
+    fetch(url)
+    .then(
+      function (response) {
+        response.json()
+        .then(
+          function (data) {
+            populatePage(data);
+          },
+          function (error) {alert(error);});
+      },
+      function (error) {
+        alert(error);
+      }
+    );
+
+    if (shouldUpdate) {
+      setTimeout(update, 2000);
+    }
+  }
+
+  function populatePage(data) {
+    const NUM_CELLS = 5;
+
+    let numMatched = 0;
+
+    for (let i = 0; i < NUM_CELLS; i++) {
+      const cellId = `cell${i + 1}`;
+      
+      const picIndex = data.tickets[i].ticket;
+
+      let opacity = 1;
+      let borderColour = "black";
+
+      if (data.tickets[i].matched) {
+        numMatched++;
+        opacity = 0.4;
+        borderColour = "gold";
+      }
+
+      document.getElementById(cellId).innerHTML = `<img style="opacity: ${opacity}; border-style: solid; border-color: ${borderColour}" src="pics/${picIndex}.png" />`;
+      document.getElementById("ticketsMatched").innerText = numMatched;
+    }
+    
+    if (numMatched === NUM_CELLS) {
+      shouldUpdate = false;
+      bingo();
+    } else if (data.latest) {
+      document.getElementById("currentPhoto").innerHTML = `<img src="pics/${data.latest}.png" />`;
+    }
+    else {
+      document.getElementById("currentPhoto").innerHTML = "(Waiting for the game to start)";
+    }
+  }
+
+  async function bingo() {
+    let url = 'http://api.giphy.com/v1/gifs/random?api_key=hIdBuKPZUDRB5doaHxRTn4qIAxKhR4Qi&tag=trophy';
+
+    const response = await fetch(url);
+    const myJson = await response.json();
+
+    document.getElementById("currentPhoto").innerHTML = `<iframe src='${myJson.data.embed_url}'></iframe>`;
+    document.getElementById("currentPhotoLabel").innerText = 'Bingo!';
+  }
+</script>
+</head>
+<body onload="load()">
+  <h1>Team <span id="teamName" /></h1>
+  <table>
+    <tr>
+      <td>Tickets Matched:</td>
+      <td id="ticketsMatched"></td>
+    </tr>
+    <tr>
+      <td id="currentPhotoLabel">Current Photo:</td>
+      <td id="currentPhoto"></td>
+    </tr>
+  </table>
+  <br />
+  <h1>Your board:</h1>
+  <table>
+    <tr>
+      <td id="cell1" />
+    </tr>
+    <tr>
+      <td id="cell2" />
+    </tr>
+    <tr>
+      <td id="cell3" />
+    </tr>
+    <tr>
+      <td id="cell4" />
+    </tr>
+    <tr>
+      <td id="cell5" />
+    </tr>
+  </table>
+</body>
+</html>

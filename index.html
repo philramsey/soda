@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Hello Soda Bingo</title>
+<link rel = "stylesheet" type = "text/css" href = "main.css" />
+<script>
+  async function submitToAPI(e) {
+    e.preventDefault();
+    document.getElementById("mySubmit").disabled = true;
+
+    const name = document.getElementById('name').value;
+
+    if (name) {
+      const url = `https://9eprxaxumf.execute-api.eu-west-2.amazonaws.com/addPlayer?name=${name}`
+      
+      fetch(url)
+      .then(function (response) {
+        console.log("hi");
+        window.location.href = `game.html?name=${name}`;
+        },
+        function (error) {
+          alert(error);
+        }
+      );
+    }
+    else {
+      alert ("You naughty child!");
+    }
+       
+  }
+</script>
+</head>
+<body>
+  <img src="pics/soda.png" />
+  <form id="name-form" class="center">
+    <label for="name" style="font-size: 16pt">Please enter your name to begin:</label>
+    <input type="text" style="height:35px;" id="name"/>
+    <button id="mySubmit" type="button" onClick="submitToAPI(event)" style="font-size: 14pt;">Submit</button>
+  </form>
+</body>
+</html>
