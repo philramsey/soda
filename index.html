@@ -14,7 +14,6 @@
       
       fetch(url)
       .then(function (response) {
-        console.log("hi");
         window.location.href = `game.html?name=${name}`;
         },
         function (error) {
@@ -23,7 +22,7 @@
       );
     }
     else {
-      alert ("You naughty child!");
+      alert ("Please enter a name!");
     }
        
   }
